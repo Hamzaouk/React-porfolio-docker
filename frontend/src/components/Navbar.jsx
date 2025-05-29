@@ -1,25 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { FaLinkedin, FaGithub, FaSquareXTwitter, FaInstagram } from "react-icons/fa6";
-import logo from "../assets/Logo.png";
+import Logo from "../assets/Logo.png"
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
+    
+    const handleMouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('mousemove', handleMouseMove);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
   }, []);
 
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const offset = element.offsetTop - 96;
+      const offset = element.offsetTop - 100;
       window.scrollTo({
         top: offset,
         behavior: 'smooth'
@@ -38,97 +49,150 @@ const Navbar = () => {
   ];
 
   const socialLinks = [
-    { icon: FaLinkedin, href: 'https://linkedin.com' },
-    { icon: FaGithub, href: 'https://github.com' },
-    { icon: FaSquareXTwitter, href: 'https://twitter.com' },
-    { icon: FaInstagram, href: 'https://instagram.com' },
+    { icon: FaLinkedin, href: 'https://linkedin.com', color: 'hover:text-blue-400' },
+    { icon: FaGithub, href: 'https://github.com', color: 'hover:text-purple-400' },
+    { icon: FaSquareXTwitter, href: 'https://twitter.com', color: 'hover:text-cyan-400' },
+    { icon: FaInstagram, href: 'https://instagram.com', color: 'hover:text-pink-400' },
   ];
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-black/90 backdrop-blur-lg shadow-lg' : 'bg-transparent'
+      {/* Animated background blur */}
+      <div 
+        className="fixed inset-0 pointer-events-none z-40"
+        style={{
+          background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(59, 130, 246, 0.15), transparent 40%)`,
+        }}
+      />
+      
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        isScrolled 
+          ? 'bg-gradient-to-r from-black/95 via-gray-900/95 to-black/95 backdrop-blur-xl shadow-2xl border-b border-white/10' 
+          : 'bg-gradient-to-r from-transparent via-black/20 to-transparent backdrop-blur-sm'
       }`}>
+        {/* Animated top border */}
+        <div className={`h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent transition-opacity duration-500 ${
+          isScrolled ? 'opacity-100' : 'opacity-0'
+        }`} />
+        
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center justify-between h-24">
+          <div className="flex items-center justify-between h-20">
+            {/* Logo */}
             <div className="flex-shrink-0">
               <img 
-                src={logo} 
+                src={Logo}
                 alt="logo" 
                 onClick={() => scrollToSection('hero')} 
-                className="h-16 w-auto cursor-pointer transition-transform duration-300 hover:scale-105"
+                className="h-20 w-auto cursor-pointer transition-transform duration-300 hover:scale-105"
               />
             </div>
 
-            <div className="hidden md:flex items-center space-x-8">
-              <ul className="flex space-x-2">
-                {navItems.map((item) => (
-                  <li 
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-1">
+              <div className="flex items-center bg-white/5 rounded-2xl p-1 backdrop-blur-sm border border-white/10">
+                {navItems.map((item, index) => (
+                  <div
                     key={item.section}
                     onClick={() => scrollToSection(item.section)}
-                    className={`px-4 py-2 rounded-lg cursor-pointer font-medium transition-all duration-300 ${
+                    className={`relative px-6 py-3 rounded-xl cursor-pointer font-medium transition-all duration-300 group ${
                       activeSection === item.section 
-                        ? 'bg-blue-600 text-white shadow-lg'
-                        : 'text-gray-300 hover:text-white hover:bg-blue-600/20'
+                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg transform scale-105'
+                        : 'text-gray-300 hover:text-white hover:bg-white/10'
                     }`}
                   >
-                    {item.label}
-                  </li>
+                    {activeSection === item.section && (
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl blur opacity-50 -z-10" />
+                    )}
+                    <span>{item.label}</span>
+                    {activeSection !== item.section && (
+                      <div className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 group-hover:w-full group-hover:left-0 transition-all duration-300" />
+                    )}
+                  </div>
                 ))}
-              </ul>
+              </div>
 
-              <div className="flex items-center gap-4">
+              {/* Social Links with enhanced styling */}
+              <div className="flex items-center gap-2 ml-6">
                 {socialLinks.map((link, index) => (
                   <a 
                     key={index}
                     href={link.href}
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-white transition-colors duration-300"
+                    className={`p-3 rounded-xl text-gray-400 ${link.color} transition-all duration-300 hover:bg-white/10 hover:scale-110 hover:rotate-12 backdrop-blur-sm border border-transparent hover:border-white/20`}
                   >
-                    <link.icon className="text-xl" />
+                    <link.icon className="text-lg" />
                   </a>
                 ))}
               </div>
             </div>
 
+            {/* Mobile menu button with animation */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden p-2 rounded-lg text-gray-400 hover:text-white hover:bg-blue-600/20 transition-colors"
+              className="md:hidden p-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-all duration-300 backdrop-blur-sm border border-white/10"
             >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
+              <div className="relative w-6 h-6">
+                <Menu 
+                  size={24} 
+                  className={`absolute inset-0 transition-all duration-300 ${
+                    isOpen ? 'opacity-0 rotate-180' : 'opacity-100 rotate-0'
+                  }`} 
+                />
+                <X 
+                  size={24} 
+                  className={`absolute inset-0 transition-all duration-300 ${
+                    isOpen ? 'opacity-100 rotate-0' : 'opacity-0 -rotate-180'
+                  }`} 
+                />
+              </div>
             </button>
           </div>
         </div>
 
-        <div className={`md:hidden transition-all duration-300 ${
-          isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-        } overflow-hidden bg-black/95 backdrop-blur-lg`}>
-          <div className="px-6 py-4 space-y-4">
-            <ul className="space-y-2">
-              {navItems.map((item) => (
-                <li 
+        {/* Enhanced Mobile Menu */}
+        <div className={`md:hidden transition-all duration-500 ${
+          isOpen 
+            ? 'max-h-screen opacity-100 transform translate-y-0' 
+            : 'max-h-0 opacity-0 transform -translate-y-4'
+        } overflow-hidden bg-gradient-to-b from-black/98 to-gray-900/98 backdrop-blur-xl border-t border-white/10`}>
+          <div className="px-6 py-6 space-y-4">
+            <div className="space-y-2">
+              {navItems.map((item, index) => (
+                <div
                   key={item.section}
                   onClick={() => scrollToSection(item.section)}
-                  className={`px-4 py-3 rounded-lg cursor-pointer font-medium transition-all duration-300 ${
+                  className={`px-6 py-4 rounded-xl cursor-pointer font-medium transition-all duration-300 transform ${
                     activeSection === item.section 
-                      ? 'bg-blue-600 text-white shadow-lg'
-                      : 'text-gray-300 hover:text-white hover:bg-blue-600/20'
+                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg scale-105'
+                      : 'text-gray-300 hover:text-white hover:bg-white/10 hover:scale-105'
                   }`}
+                  style={{ 
+                    animationDelay: `${index * 100}ms`,
+                    animation: isOpen ? 'slideInLeft 0.5s ease-out forwards' : 'none'
+                  }}
                 >
-                  {item.label}
-                </li>
+                  <div className="flex items-center gap-3">
+                    <span>{item.label}</span>
+                    <ChevronDown className="ml-auto w-4 h-4 opacity-50" />
+                  </div>
+                </div>
               ))}
-            </ul>
+            </div>
 
-            <div className="flex items-center gap-4 pt-4 border-t border-gray-800">
+            {/* Mobile Social Links */}
+            <div className="flex items-center justify-center gap-4 pt-6 border-t border-white/10">
               {socialLinks.map((link, index) => (
                 <a 
                   key={index}
                   href={link.href}
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors duration-300"
+                  className={`p-4 rounded-xl text-gray-400 ${link.color} transition-all duration-300 hover:bg-white/10 hover:scale-110 backdrop-blur-sm border border-white/10`}
+                  style={{ 
+                    animationDelay: `${(navItems.length + index) * 100}ms`,
+                    animation: isOpen ? 'slideInUp 0.5s ease-out forwards' : 'none'
+                  }}
                 >
                   <link.icon className="text-xl" />
                 </a>
@@ -137,7 +201,32 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-      <div className="h-24"></div>
+      
+      <div className="h-20"></div>
+
+      <style jsx>{`
+        @keyframes slideInLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        @keyframes slideInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </>
   );
 };

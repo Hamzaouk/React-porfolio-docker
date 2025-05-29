@@ -1,196 +1,246 @@
-import React, { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import blogImage from '../assets/projects/Blog-Cover.gif'; 
-import calcImage from '../assets/projects/calculator.gif'; 
-import tachesImage from '../assets/projects/200w.gif'; 
-import stockImage from '../assets/projects/st.gif'; 
-import { FaGithub } from 'react-icons/fa';
-
-// Register ScrollTrigger plugin
-gsap.registerPlugin(ScrollTrigger);
+import React, { useEffect, useRef, useState } from 'react';
+import { FaGithub, FaExternalLinkAlt, FaCode, FaDatabase, FaReact } from 'react-icons/fa';
+import { SiNodedotjs, SiMongodb, SiJavascript, SiHtml5, SiCss3 } from 'react-icons/si';
 
 const Projects = () => {
-  // Create refs for each project
-  const projectRefs = useRef([]);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [hoveredCard, setHoveredCard] = useState(null);
+  const projectsRef = useRef(null);
 
   useEffect(() => {
-    // Add scroll animations to each project
-    projectRefs.current.forEach((project) => {
-      gsap.fromTo(
-        project,
-        {
-          opacity: 0,
-          y: 100, // Start 100 pixels below original position
-          scale: 0.9 // Slightly scaled down
-        },
-        {
-          opacity: 1,
-          y: 0, // Return to original position
-          scale: 1,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: project,
-            start: "top 80%", // Animation starts when top of project enters 80% of viewport
-            toggleActions: "play none none reverse" // Play forward when entering, reverse when leaving
-          }
-        }
-      );
-    });
+    const handleMouseMove = (e) => {
+      if (projectsRef.current) {
+        const rect = projectsRef.current.getBoundingClientRect();
+        setMousePosition({
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top
+        });
+      }
+    };
 
-    // Cleanup function
+    const projectsElement = projectsRef.current;
+    if (projectsElement) {
+      projectsElement.addEventListener('mousemove', handleMouseMove);
+    }
+
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      if (projectsElement) {
+        projectsElement.removeEventListener('mousemove', handleMouseMove);
+      }
     };
   }, []);
 
-  // Helper function to add refs
-  const addToRefs = (el) => {
-    if (el && !projectRefs.current.includes(el)) {
-      projectRefs.current.push(el);
+  const projects = [
+    {
+      id: 1,
+      title: "Calculatrice",
+      description: "L'objectif est de créer une calculatrice simple en Node.js qui prend en charge plusieurs opérations mathématiques, implémente les principes de programmation orientée objet en JavaScript et adhère à la gestion des erreurs et aux principes SOLID.",
+      image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=500&h=300&fit=crop&crop=entropy&auto=format",
+      github: "https://github.com/yourusername/calculatrice-project",
+      demo: "#",
+      technologies: [SiJavascript, SiNodedotjs],
+      category: "Backend",
+      gradient: "from-blue-500 to-purple-600"
+    },
+    {
+      id: 2,
+      title: "Blog Website",
+      description: "Ce projet met en avant les fondamentaux du développement web, tout en assurant une navigation fluide et une structure bien organisée.",
+      image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=500&h=300&fit=crop&crop=entropy&auto=format",
+      github: "https://github.com/Hamzaouk/Blog-Statique",
+      demo: "#",
+      technologies: [SiHtml5, SiCss3, SiJavascript],
+      category: "Frontend",
+      gradient: "from-green-500 to-teal-600"
+    },
+    {
+      id: 3,
+      title: "Gestionnaire de stock",
+      description: "Une application basée sur Node.js conçue pour faciliter la gestion des stocks d'une entreprise, qu'il s'agisse de petites, moyennes ou grandes structures.",
+      image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=500&h=300&fit=crop&crop=entropy&auto=format",
+      github: "https://github.com/yourusername/stock-management",
+      demo: "#",
+      technologies: [SiNodedotjs, SiMongodb, SiJavascript],
+      category: "Full Stack",
+      gradient: "from-orange-500 to-red-600"
+    },
+    {
+      id: 4,
+      title: "Gestionnaire des tâches",
+      description: "Développer une application backend pour la gestion des tâches en utilisant Node.js, Express.js, et MongoDB. Les utilisateurs peuvent gérer leurs tâches grâce à des opérations CRUD complètes.",
+      image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=500&h=300&fit=crop&crop=entropy&auto=format",
+      github: "https://github.com/yourusername/task-management",
+      demo: "#",
+      technologies: [SiNodedotjs, SiMongodb, FaDatabase],
+      category: "Backend",
+      gradient: "from-pink-500 to-purple-600"
     }
-  };
+  ];
 
   return (
-<div id="projects" className="border-b border-neutral-900 py-12">
-        <h2 className="my-20 text-center text-4xl">
-        <span className="text-neutral-500">My </span>Projects
-      </h2>
+    <div id="projects" className="relative min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 py-20 overflow-hidden">
+      {/* Animated background */}
+      <div 
+        className="absolute inset-0 opacity-30"
+        style={{
+          background: `radial-gradient(800px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(59, 130, 246, 0.15), transparent 40%)`,
+        }}
+      />
       
-      <div className="max-w-6xl mx-auto px-4">
-        {/* Project 1: Calculatrice */}
-        <div 
-          ref={addToRefs} 
-          className="flex flex-col lg:flex-row items-center gap-8 mb-16 opacity-0"
-        >
-          {/* Project Image */}
-          <div className="w-full lg:w-1/2">
-            <img 
-              src={calcImage} 
-              alt="Calculatrice Project" 
-              className="w-full h-auto rounded-lg shadow-lg object-cover"             
-            />
-          </div>
-          
-          {/* Project Description */}
-          <div className="w-full lg:w-1/2">
-            <h3 className="text-3xl font-bold mb-4">Calculatrice</h3>
-            <p className="text-neutral-400 mb-6">
-            L'objectif est de créer une calculatrice simple en Node.js qui prend en charge plusieurs opérations mathématiques, implémente les principes de programmation orientée objet en JavaScript et adhère à la gestion des erreurs et aux principes SOLID.
+      <div ref={projectsRef} className="relative max-w-7xl mx-auto px-6">
+         {/* Section Header */}
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-6xl font-bold mb-6">
+              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">My</span> Projects
+            </h2>
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="w-16 h-0.5 bg-gradient-to-r from-transparent to-blue-500"></div>
+              <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+              <div className="w-16 h-0.5 bg-gradient-to-l from-transparent to-purple-500"></div>
+            </div>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              Passionate developer crafting digital experiences with creativity and precision
             </p>
-            
-            {/* GitHub Link Button */}
-            <a 
-              href="https://github.com/yourusername/calculatrice-project" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center justify-center w-48 bg-purple-600 text-white 
-                         py-3 px-6 rounded-lg hover:bg-purple-700 transition-colors duration-300"
-            >
-              <FaGithub className="mr-2" />
-              Read More
-            </a>
           </div>
+
+
+        {/* Projects Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {projects.map((project, index) => (
+            <div
+              key={project.id}
+              className="group relative"
+              onMouseEnter={() => setHoveredCard(project.id)}
+              onMouseLeave={() => setHoveredCard(null)}
+              style={{
+                animation: `fadeInUp 0.6s ease-out ${index * 0.2}s both`
+              }}
+            >
+              {/* Card Background with Glow */}
+              <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-20 transition-opacity duration-500 rounded-2xl blur-xl"
+                   style={{ background: `linear-gradient(135deg, ${project.gradient.replace('from-', '').replace(' to-', ', ')})` }}>
+              </div>
+              
+              {/* Main Card */}
+              <div className="relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl overflow-hidden transition-all duration-500 hover:border-gray-600/50 hover:transform hover:scale-105 hover:-translate-y-2">
+                
+                {/* Image Container */}
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  
+                  {/* Overlay Gradient */}
+                  <div className={`absolute inset-0 bg-gradient-to-t ${project.gradient.replace('from-', 'from-')} to-transparent opacity-60`}></div>
+                  
+                  {/* Category Badge */}
+                  <div className="absolute top-4 left-4">
+                    <span className={`px-3 py-1 text-xs font-semibold text-white bg-gradient-to-r ${project.gradient} rounded-full shadow-lg`}>
+                      {project.category}
+                    </span>
+                  </div>
+
+                  {/* Project Number */}
+                  <div className="absolute top-4 right-4">
+                    <div className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white font-bold text-sm">
+                      {String(project.id).padStart(2, '0')}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-6">
+                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-purple-600 transition-all duration-300">
+                    {project.title}
+                  </h3>
+                  
+                  <p className="text-gray-400 mb-6 line-clamp-3 leading-relaxed">
+                    {project.description}
+                  </p>
+
+                  {/* Technologies */}
+                  <div className="flex items-center gap-3 mb-6">
+                    <span className="text-sm text-gray-500">Technologies:</span>
+                    <div className="flex gap-2">
+                      {project.technologies.map((Tech, i) => (
+                        <div key={i} className="p-2 bg-gray-800/50 rounded-lg hover:bg-gray-700/50 transition-colors">
+                          <Tech className="text-lg text-gray-400 hover:text-white transition-colors" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-3">
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 text-white py-3 px-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-gray-700/25"
+                    >
+                      <FaGithub className="text-lg" />
+                      <span className="font-medium">Code</span>
+                    </a>
+                    
+                    <a
+                      href={project.demo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`flex-1 flex items-center justify-center gap-2 bg-gradient-to-r ${project.gradient} hover:shadow-lg transition-all duration-300 text-white py-3 px-4 rounded-xl font-medium hover:transform hover:scale-105`}
+                      style={{
+                        boxShadow: hoveredCard === project.id ? `0 10px 25px -5px ${project.gradient.includes('blue') ? 'rgba(59, 130, 246, 0.4)' : 'rgba(168, 85, 247, 0.4)'}` : 'none'
+                      }}
+                    >
+                      <FaExternalLinkAlt className="text-sm" />
+                      <span>Demo</span>
+                    </a>
+                  </div>
+                </div>
+
+                {/* Hover Effect Border */}
+                <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`}
+                     style={{
+                       background: `linear-gradient(135deg, ${project.gradient.replace('from-', '').replace(' to-', ', ')})`,
+                       padding: '2px',
+                       mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                       maskComposite: 'exclude'
+                     }}>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* Project 2: Blog */}
-        <div 
-          ref={addToRefs} 
-          className="flex flex-col lg:flex-row items-center gap-8 mb-16 opacity-0"
-        >
-          <div className="w-full lg:w-1/2">
-            <img 
-              src={blogImage} 
-              alt="Blog Project" 
-              className="w-full h-auto rounded-lg shadow-lg object-cover"             
-            />
-          </div>
-          
-          <div className="w-full lg:w-1/2">
-            <h3 className="text-3xl font-bold mb-4">Blog Website</h3>
-            <p className="text-neutral-400 mb-6">
-            Ce projet met en avant les fondamentaux du développement web, tout en assurant une navigation fluide et une structure bien organisée.
-            </p>
-            
-            <a 
-              href="https://github.com/Hamzaouk/Blog-Statique" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center justify-center w-48 bg-purple-600 text-white 
-                         py-3 px-6 rounded-lg hover:bg-purple-700 transition-colors duration-300"
-            >
-              <FaGithub className="mr-2" />
-              Read More
-            </a>
-          </div>
-        </div>
-
-        {/* Project 3: Stock Management */}
-        <div 
-          ref={addToRefs} 
-          className="flex flex-col lg:flex-row items-center gap-8 mb-16 opacity-0"
-        >
-          <div className="w-full lg:w-1/2">
-            <img 
-              src={stockImage} 
-              alt="Stock Management Project" 
-              className="w-full h-auto rounded-lg shadow-lg object-cover"             
-            />
-          </div>
-          
-          <div className="w-full lg:w-1/2">
-            <h3 className="text-3xl font-bold mb-4">Gestionaire de stock</h3>
-            <p className="text-neutral-400 mb-6">
-            Une application basée sur Node.js conçue pour faciliter la gestion des stocks d'une entreprise, qu'il s'agisse de petites, moyennes ou grandes structures. Ce projet offre une solution centralisée et efficace pour suivre les produits, surveiller les niveaux de stock, et optimiser les opérations d'approvisionnement.
-            </p>
-            
-            <a 
-              href="https://github.com/yourusername/stock-management" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center justify-center w-48 bg-purple-600 text-white 
-                         py-3 px-6 rounded-lg hover:bg-purple-700 transition-colors duration-300"
-            >
-              <FaGithub className="mr-2" />
-              Read More
-            </a>
-          </div>
-        </div>
-
-        {/* Project 4: Task Management */}
-        <div 
-          ref={addToRefs} 
-          className="flex flex-col lg:flex-row items-center gap-8 mb-16 opacity-0"
-        >
-          <div className="w-full lg:w-1/2">
-            <img 
-              src={tachesImage} 
-              alt="Task Management Project" 
-              className="w-full h-auto rounded-lg shadow-lg object-cover"             
-            />
-          </div>
-          
-          <div className="w-full lg:w-1/2">
-            <h3 className="text-3xl font-bold mb-4">Gestionaire des taches</h3>
-            <p className="text-neutral-400 mb-6">
-            Cette project est Développer une application backend pour la gestion des tâches en utilisant Node.js, Express.js, et MongoDB.
-            Les utilisateurs peuvent gérer leurs tâches grâce à des opérations CRUD complètes, avec des données stockées dans une base MongoDB.
-            </p>
-            
-            <a 
-              href="https://github.com/yourusername/task-management" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center justify-center w-48 bg-purple-600 text-white 
-                         py-3 px-6 rounded-lg hover:bg-purple-700 transition-colors duration-300"
-            >
-              <FaGithub className="mr-2" />
-              Read More
-            </a>
+        {/* Call to Action */}
+        <div className="text-center mt-16">
+          <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full text-white font-medium hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 cursor-pointer">
+            <FaCode className="text-lg" />
+            <span>Voir plus de projets</span>
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .line-clamp-3 {
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+      `}</style>
     </div>
   );
 };

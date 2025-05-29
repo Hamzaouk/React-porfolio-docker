@@ -38,7 +38,7 @@ const Hero = () => {
   }, [displayText, isDeleting, loopNum, typingSpeed]);
 
   return (
-<section id="hero" className="relative h-[95vh] flex items-center justify-center mb-4 overflow-hidden">
+<section id="hero" className="relative h-[92vh] flex items-center justify-center overflow-hidden">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -82,29 +82,29 @@ const Hero = () => {
 
             {/* Enhanced CTA buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-6">
-              <button className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 via-blue-700 to-purple-600 text-white font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/25">
+              <a href="#projects" className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 via-blue-700 to-purple-600 text-white font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/25">
                 <span className="relative z-10">View My Work</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </button>
-              
-              <button className="group px-8 py-4 border-2 border-blue-500/50 text-blue-400 font-semibold rounded-xl relative overflow-hidden transition-all duration-300 hover:border-blue-400 hover:text-white hover:scale-105">
+              </a>
+
+              <a href="#contact" className="group px-8 py-4 border-2 border-blue-500/50 text-blue-400 font-semibold rounded-xl relative overflow-hidden transition-all duration-300 hover:border-blue-400 hover:text-white hover:scale-105">
                 <span className="relative z-10">Let's Connect</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </button>
+              </a>
             </div>
 
             {/* Social proof or stats */}
             <div className="flex gap-8 pt-6 text-sm text-gray-500">
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-400">50+</div>
+                <div className="text-2xl font-bold text-blue-400">10+</div>
                 <div>Projects</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-400">3+</div>
+                <div className="text-2xl font-bold text-purple-400">2+</div>
                 <div>Years Exp</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-cyan-400">99%</div>
+                <div className="text-2xl font-bold text-cyan-400">100%</div>
                 <div>Satisfaction</div>
               </div>
             </div>
