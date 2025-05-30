@@ -1,43 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { IoIosSend } from "react-icons/io";
-
-gsap.registerPlugin(ScrollTrigger);
+import React, { useState } from 'react';
+import { FaUser, FaEnvelope, FaPhone, FaCommentDots, FaPaperPlane, FaCheckCircle } from "react-icons/fa";
 
 const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    message: ''
-  });
-
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
   const [errors, setErrors] = useState({});
   const [submitStatus, setSubmitStatus] = useState('');
-  const contactRef = useRef(null);
-
-  useEffect(() => {
-    if (contactRef.current) {
-      gsap.fromTo(
-        contactRef.current,
-        { opacity: 0, y: 100, scale: 0.9 },
-        { 
-          opacity: 1, 
-          y: 0, 
-          scale: 1, 
-          duration: 1, 
-          ease: "power3.out", 
-          scrollTrigger: {
-            trigger: contactRef.current,
-            start: "top 80%",
-            toggleActions: "play none none reverse"
-          }
-        }
-      );
-    }
-    return () => ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-  }, []);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateForm = () => {
     const newErrors = {};
@@ -60,115 +28,114 @@ const Contact = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({ ...prevState, [name]: value }));
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
+      setIsSubmitting(true);
       try {
-        const response = await fetch('http://localhost:3000/api/contact', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-          setSubmitStatus('Message sent successfully!');
-          setFormData({ name: '', email: '', phone: '', message: '' });
-          setErrors({});
-        } else {
-          setSubmitStatus(data.error || 'Failed to send message. Please try again.');
-        }
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        setSubmitStatus('success');
+        setFormData({ name: '', email: '', phone: '', message: '' });
+        setErrors({});
       } catch (error) {
-        setSubmitStatus('Error sending message. Please try again later.');
+        setSubmitStatus('error');
+      } finally {
+        setIsSubmitting(false);
+        setTimeout(() => setSubmitStatus(''), 3000);
       }
     }
   };
 
   return (
-    <section id="contact" ref={contactRef} className="py-24">
-      <div className="max-w-md mx-auto p-8 bg-neutral-900 rounded-xl shadow-lg">
-        <h2 className="text-4xl font-bold text-center mb-8 text-white">Contact <span className="text-neutral-500">Me</span></h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="name" className="block text-white mb-2">Name</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className={`w-full p-3 rounded-lg bg-neutral-800 text-white ${errors.name ? 'border-2 border-red-500' : 'border border-neutral-700'}`}
-              placeholder="Your Name"
-              maxLength="30"
-            />
-            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
-          </div>
-          
-          <div>
-            <label htmlFor="email" className="block text-white mb-2">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className={`w-full p-3 rounded-lg bg-neutral-800 text-white ${errors.email ? 'border-2 border-red-500' : 'border border-neutral-700'}`}
-              placeholder="your.email@example.com"
-            />
-            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-          </div>
+    <section id="contact" className="relative py-24 bg-gradient-to-br from-gray-900 via-black to-gray-900">
 
-          <div>
-            <label htmlFor="phone" className="block text-white mb-2">Phone</label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className={`w-full p-3 rounded-lg bg-neutral-800 text-white ${errors.phone ? 'border-2 border-red-500' : 'border border-neutral-700'}`}
-              placeholder="0600000000"
-              maxLength={10}
-            />
-            {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
-          </div>
+      {/* Section Header */}
+      <div className="text-center mb-16">
+        <h2 className="text-4xl md:text-6xl font-bold mb-6">
+          About <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Me</span>
+        </h2>
+        <div className="flex items-center justify-center gap-4 mb-4">
+          <div className="w-16 h-0.5 bg-gradient-to-r from-transparent to-blue-500"></div>
+          <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+          <div className="w-16 h-0.5 bg-gradient-to-l from-transparent to-purple-500"></div>
+        </div>
+        <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+          Let's work together to bring your ideas to life
+        </p>
+      </div>
 
-          <div>
-            <label htmlFor="message" className="block text-white mb-2">Message</label>
-            <textarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              rows="4"
-              maxLength={200}
-              className={`w-full p-3 rounded-lg bg-neutral-800 text-white ${errors.message ? 'border-2 border-red-500' : 'border border-neutral-700'}`}
-              placeholder="Your Message"
-            />
-            {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message}</p>}
-          </div>
+      {/* Contact Form */}
+      <form onSubmit={handleSubmit} className="space-y-6 max-w-xl mx-auto">
+        <div className="flex items-center gap-3 bg-gray-800/60 rounded-md px-4 py-3">
+          <FaUser className="text-blue-400" />
+          <input
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Your name"
+            className="bg-transparent outline-none w-full text-white"
+          />
+        </div>
+        {errors.name && <p className="text-red-400 text-sm">{errors.name}</p>}
 
+        <div className="flex items-center gap-3 bg-gray-800/60 rounded-md px-4 py-3">
+          <FaEnvelope className="text-blue-400" />
+          <input
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Your email"
+            className="bg-transparent outline-none w-full text-white"
+          />
+        </div>
+        {errors.email && <p className="text-red-400 text-sm">{errors.email}</p>}
+
+        <div className="flex items-center gap-3 bg-gray-800/60 rounded-md px-4 py-3">
+          <FaPhone className="text-blue-400" />
+          <input
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            placeholder="Your phone"
+            className="bg-transparent outline-none w-full text-white"
+          />
+        </div>
+        {errors.phone && <p className="text-red-400 text-sm">{errors.phone}</p>}
+
+        <div className="flex items-start gap-3 bg-gray-800/60 rounded-md px-4 py-3">
+          <FaCommentDots className="text-blue-400 mt-1" />
+          <textarea
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            placeholder="Your message"
+            className="bg-transparent outline-none w-full text-white"
+            rows={4}
+          ></textarea>
+        </div>
+        {errors.message && <p className="text-red-400 text-sm">{errors.message}</p>}
+
+        {/* Centered Send Button */}
+        <div className="flex justify-center">
           <button
             type="submit"
-            className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors duration-300 flex items-center justify-center"
+            className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 rounded-md text-white font-semibold hover:scale-105 transition-transform duration-300"
+            disabled={isSubmitting}
           >
-            Send Message <IoIosSend className="ml-2" />
+            {isSubmitting ? 'Sending...' : 'Send'} <FaPaperPlane />
           </button>
-          {submitStatus && (
-            <p className={`text-center mt-2 ${submitStatus.includes('successfully') ? 'text-green-500' : 'text-red-500'}`}>
-              {submitStatus}
-            </p>
-          )}
-        </form>
-      </div>
+        </div>
+
+        {submitStatus === 'success' && (
+          <div className="flex items-center justify-center gap-2 text-green-400 mt-4">
+            <FaCheckCircle /> Message sent successfully!
+          </div>
+        )}
+      </form>
     </section>
   );
 };

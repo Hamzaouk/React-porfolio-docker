@@ -126,6 +126,7 @@ const Hero = () => {
               {/* Image container */}
               <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-2 rounded-2xl">
                 <img 
+                
                   src={Me} 
                   alt="Hamza Oukhatou - Full Stack Developer" 
                   className="relative rounded-xl w-full object-cover shadow-2xl transform transition-all duration-500 group-hover:scale-[1.02] filter brightness-110"
