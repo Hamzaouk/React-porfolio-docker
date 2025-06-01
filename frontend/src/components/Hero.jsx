@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
 import Me from "../assets/205A2683-removebg-preview.png";
 
 const Hero = () => {
@@ -6,6 +7,18 @@ const Hero = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [loopNum, setLoopNum] = useState(0);
   const [typingSpeed, setTypingSpeed] = useState(150);
+  const [animationsCompleted, setAnimationsCompleted] = useState(false);
+
+  // Refs for GSAP animations
+  const heroRef = useRef(null);
+  const nameRef = useRef(null);
+  const typingRef = useRef(null);
+  const descriptionRef = useRef(null);
+  const buttonsRef = useRef(null);
+  const statsRef = useRef(null);
+  const imageRef = useRef(null);
+  const backgroundRef = useRef(null);
+  const scrollIndicatorRef = useRef(null);
 
   const titles = [
     "Full Stack Developer",
@@ -13,7 +26,102 @@ const Hero = () => {
     "JavaScript Expert"
   ];
 
+  // GSAP Animation Timeline
   useEffect(() => {
+    // Check if animations have already been played
+    const hasAnimated = sessionStorage.getItem('heroAnimated');
+    
+    if (!hasAnimated) {
+      const tl = gsap.timeline({
+        onComplete: () => {
+          setAnimationsCompleted(true);
+          sessionStorage.setItem('heroAnimated', 'true');
+        }
+      });
+
+      // Set initial states
+      gsap.set([nameRef.current, typingRef.current, descriptionRef.current, buttonsRef.current, statsRef.current], {
+        opacity: 0,
+        y: 50
+      });
+      
+      gsap.set(imageRef.current, {
+        opacity: 0,
+        scale: 0.8,
+        rotation: -10
+      });
+
+      gsap.set(backgroundRef.current.children, {
+        opacity: 0,
+        scale: 0.5
+      });
+
+      gsap.set(scrollIndicatorRef.current, {
+        opacity: 0,
+        y: 20
+      });
+
+      // Animation sequence
+      tl.to(backgroundRef.current.children, {
+        opacity: 1,
+        scale: 1,
+        duration: 1.5,
+        stagger: 0.2,
+        ease: "power2.out"
+      })
+      .to(nameRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power3.out"
+      }, "-=1")
+      .to(imageRef.current, {
+        opacity: 1,
+        scale: 1,
+        rotation: 0,
+        duration: 1.2,
+        ease: "elastic.out(1, 0.8)"
+      }, "-=0.5")
+      .to(typingRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power2.out"
+      }, "-=0.3")
+      .to(descriptionRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power2.out"
+      }, "-=0.4")
+      .to(buttonsRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power2.out"
+      }, "-=0.3")
+      .to(statsRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power2.out"
+      }, "-=0.4")
+      .to(scrollIndicatorRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: "bounce.out"
+      }, "-=0.2");
+    } else {
+      // If animations have been played, show everything immediately
+      setAnimationsCompleted(true);
+    }
+  }, []);
+
+  // Typing animation effect
+  useEffect(() => {
+    if (!animationsCompleted) return;
+
     const ticker = setTimeout(() => {
       const i = loopNum % titles.length;
       const fullText = titles[i];
@@ -35,12 +143,16 @@ const Hero = () => {
     }, typingSpeed);
 
     return () => clearTimeout(ticker);
-  }, [displayText, isDeleting, loopNum, typingSpeed]);
+  }, [displayText, isDeleting, loopNum, typingSpeed, animationsCompleted]);
 
   return (
-<section id="hero" className="relative h-[92vh] flex items-center justify-center overflow-hidden">
+    <section 
+      ref={heroRef}
+      id="hero" 
+      className="relative h-[92vh] flex items-center justify-center overflow-hidden"
+    >
       {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div ref={backgroundRef} className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl animate-pulse delay-500"></div>
@@ -51,7 +163,7 @@ const Hero = () => {
           {/* Content Section */}
           <div className="space-y-6 lg:space-y-8 order-2 lg:order-1">
             {/* Name with enhanced styling */}
-            <div className="relative">
+            <div ref={nameRef} className="relative">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
                 <span className="block bg-gradient-to-r from-white via-blue-400 to-purple-400 bg-clip-text text-transparent">
                   Hamza
@@ -65,15 +177,15 @@ const Hero = () => {
             </div>
 
             {/* Typing animation */}
-            <div className="h-16 flex items-center">
+            <div ref={typingRef} className="h-16 flex items-center">
               <span className="text-2xl sm:text-3xl lg:text-4xl font-medium text-gray-300 font-mono">
-                {displayText}
+                {animationsCompleted && displayText}
                 <span className="animate-pulse text-cyan-400 ml-1">|</span>
               </span>
             </div>
 
             {/* Description */}
-            <p className="text-lg sm:text-xl text-gray-400 leading-relaxed max-w-2xl">
+            <p ref={descriptionRef} className="text-lg sm:text-xl text-gray-400 leading-relaxed max-w-2xl">
               Passionate about crafting exceptional digital experiences through innovative 
               <span className="text-blue-400 font-medium"> design</span> and 
               <span className="text-purple-400 font-medium"> development</span>. 
@@ -81,7 +193,7 @@ const Hero = () => {
             </p>
 
             {/* Enhanced CTA buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-6">
+            <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4 pt-6">
               <a href="#projects" className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 via-blue-700 to-purple-600 text-white font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/25">
                 <span className="relative z-10">View My Work</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -94,9 +206,9 @@ const Hero = () => {
             </div>
 
             {/* Social proof or stats */}
-            <div className="flex gap-8 pt-6 text-sm text-gray-500">
+            <div ref={statsRef} className="flex gap-8 pt-6 text-sm text-gray-500">
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-400">10+</div>
+                <div className="text-2xl font-bold text-blue-400">20+</div>
                 <div>Projects</div>
               </div>
               <div className="text-center">
@@ -112,7 +224,7 @@ const Hero = () => {
 
           {/* Enhanced Image Section */}
           <div className="relative order-1 lg:order-2">
-            <div className="relative group max-w-md mx-auto lg:max-w-full">
+            <div ref={imageRef} className="relative group max-w-md mx-auto lg:max-w-full">
               {/* Animated background rings */}
               <div className="absolute inset-0 animate-spin-slow">
                 <div className="absolute inset-4 border border-blue-500/20 rounded-full"></div>
@@ -126,13 +238,10 @@ const Hero = () => {
               {/* Image container */}
               <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-2 rounded-2xl">
                 <img 
-                
                   src={Me} 
                   alt="Hamza Oukhatou - Full Stack Developer" 
                   className="relative rounded-xl w-full object-cover shadow-2xl transform transition-all duration-500 group-hover:scale-[1.02] filter brightness-110"
                 />
-                
-                
               </div>
             </div>
           </div>
@@ -140,7 +249,7 @@ const Hero = () => {
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <div ref={scrollIndicatorRef} className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
         <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
           <div className="w-1 h-3 bg-gradient-to-b from-blue-400 to-purple-400 rounded-full mt-2 animate-pulse"></div>
         </div>

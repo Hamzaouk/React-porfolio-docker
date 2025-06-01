@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FaUser, FaEnvelope, FaPhone, FaCommentDots, FaPaperPlane, FaCheckCircle } from "react-icons/fa";
+import emailjs from "@emailjs/browser";
 
 const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', message: '' });
@@ -36,12 +37,22 @@ const Contact = () => {
     e.preventDefault();
     if (validateForm()) {
       setIsSubmitting(true);
+      
+      const form = e.currentTarget;
+      
       try {
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await emailjs.sendForm(
+          import.meta.env.VITE_EMAILJS_SERVICE_ID,
+          import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+          form,
+          import.meta.env.VITE_EMAILJS_USER_ID
+        );
+
         setSubmitStatus('success');
         setFormData({ name: '', email: '', phone: '', message: '' });
         setErrors({});
       } catch (error) {
+        console.error("Error sending email:", error);
         setSubmitStatus('error');
       } finally {
         setIsSubmitting(false);
@@ -133,6 +144,12 @@ const Contact = () => {
         {submitStatus === 'success' && (
           <div className="flex items-center justify-center gap-2 text-green-400 mt-4">
             <FaCheckCircle /> Message sent successfully!
+          </div>
+        )}
+        
+        {submitStatus === 'error' && (
+          <div className="flex items-center justify-center gap-2 text-red-400 mt-4">
+            Error sending message. Please try again later.
           </div>
         )}
       </form>

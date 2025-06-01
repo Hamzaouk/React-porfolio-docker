@@ -1,11 +1,32 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import gsap from 'gsap';
 import Veg from "../assets/Me-gray.png";
 import CV from "../assets/cv/OukhatouuHamza-cv.pdf";
 
 const About = () => {
+  const sectionRef = useRef();
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        sectionRef.current,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.5,
+          ease: "power3.out"
+        }
+      );
+    }, sectionRef);
+
+    return () => ctx.revert(); 
+  }, []);
+
+
   const highlights = [
     { label: "Experience", value: "2+ Years", icon: "🚀" },
-    { label: "Projects", value: "10+", icon: "💼" },
+    { label: "Projects", value: "20+", icon: "💼" },
     { label: "Technologies", value: "10+", icon: "⚡" },
     { label: "Clients", value: "Happy", icon: "😊" }
   ];
@@ -20,7 +41,7 @@ const About = () => {
   ];
 
   return (
-    <section id="about" className="relative py-20 overflow-hidden">
+    <section id="about" ref={sectionRef} className="relative py-20 overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl"></div>
@@ -43,7 +64,7 @@ const About = () => {
             Passionate developer crafting digital experiences with creativity and precision
           </p>
         </div>
-        
+
         <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
           {/* Enhanced Image Section */}
           <div className="relative order-2 lg:order-1">
@@ -55,10 +76,10 @@ const About = () => {
                 <div className="absolute bottom-0 left-0 w-20 h-20 border-b-2 border-l-2 border-cyan-500 animate-pulse delay-700"></div>
                 <div className="absolute bottom-0 right-0 w-20 h-20 border-b-2 border-r-2 border-pink-500 animate-pulse delay-1000"></div>
               </div>
-              
+
               {/* Main glow effect */}
               <div className="absolute -inset-4 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded-2xl blur-xl opacity-20 group-hover:opacity-40 transition-all duration-700"></div>
-              
+
               {/* Image container with glass effect */}
               <div className="relative bg-gradient-to-br from-gray-900/80 via-gray-800/60 to-gray-900/80 backdrop-blur-sm p-3 rounded-2xl border border-gray-700/50">
                 <img 
@@ -69,7 +90,7 @@ const About = () => {
               </div>
             </div>
           </div>
-          
+
           {/* Enhanced Content Section */}
           <div className="space-y-8 order-1 lg:order-2">
             <div className="space-y-6">
@@ -81,7 +102,7 @@ const About = () => {
                   A passionate <span className="text-blue-400 font-semibold">full-stack developer</span> on an exciting journey to build user-friendly and efficient web applications. I specialize in modern JavaScript technologies and have hands-on experience with the latest web development tools and frameworks.
                 </p>
               </div>
-              
+
               <div className="relative">
                 <p className="text-lg text-gray-300 leading-relaxed">
                   As I continue to learn and grow, I'm excited to bring <span className="text-purple-400 font-semibold">creativity</span> and <span className="text-cyan-400 font-semibold">functionality</span> together in every project. My goal is to create seamless, intuitive experiences that make a real difference in people's lives.
@@ -106,7 +127,7 @@ const About = () => {
 
             {/* Enhanced CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-             <a
+              <a
                 href={CV}
                 download="Hamza-Oukhatou-CV.pdf"
                 className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 via-blue-700 to-purple-600 text-white font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/25"
@@ -117,8 +138,7 @@ const About = () => {
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </a>
 
-              
-             <a
+              <a
                 href={linkdin}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -129,7 +149,6 @@ const About = () => {
                 </span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </a>
-
             </div>
           </div>
         </div>
@@ -143,15 +162,14 @@ const About = () => {
               Let's create something amazing together!
             </p>
             <a
-          href="#contact"
-          className="group inline-block relative px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/25"
-        >
-          <span className="relative z-10 flex items-center justify-center gap-2">
-            🚀 Start a Project
-          </span>
-          <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        </a>
-
+              href="#contact"
+              className="group inline-block relative px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/25"
+            >
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                🚀 Start a Project
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </a>
           </div>
         </div>
       </div>

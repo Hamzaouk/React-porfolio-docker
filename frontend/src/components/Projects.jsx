@@ -213,12 +213,17 @@ const Projects = () => {
           ))}
         </div>
 
-        {/* Call to Action */}
+       {/* Call to Action */}
         <div className="text-center mt-16">
-          <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full text-white font-medium hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 cursor-pointer">
+          <a 
+            href="https://github.com/Hamzaouk" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full text-white font-medium hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 cursor-pointer"
+          >
             <FaCode className="text-lg" />
             <span>Voir plus de projets</span>
-          </div>
+          </a>
         </div>
       </div>
 
