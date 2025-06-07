@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { FaUser, FaEnvelope, FaCommentDots, FaPaperPlane, FaCheckCircle, FaTimes } from "react-icons/fa";
+import { User, Mail, MessageSquare, Send, CheckCircle, X } from 'lucide-react';
 
 // Validation Schema
 const validationSchema = Yup.object({
@@ -40,9 +40,9 @@ const Toast = ({ message, type, isVisible, onClose }) => {
       }`}>
         <div className="flex items-center gap-2">
           {type === 'success' ? (
-            <FaCheckCircle className="text-green-400 text-lg" />
+            <CheckCircle className="text-green-400\" size={18} />
           ) : (
-            <FaTimes className="text-red-400 text-lg" />
+            <X className="text-red-400" size={18} />
           )}
           <span className="font-medium">{message}</span>
         </div>
@@ -50,7 +50,7 @@ const Toast = ({ message, type, isVisible, onClose }) => {
           onClick={onClose}
           className="ml-2 text-gray-300 hover:text-white transition-colors"
         >
-          <FaTimes className="text-sm" />
+          <X size={14} />
         </button>
       </div>
     </div>
@@ -67,7 +67,7 @@ const CustomField = ({ icon: Icon, field, form, ...props }) => {
         ? 'border-red-500/50' 
         : 'border-gray-700/50 focus-within:border-blue-500/50'
     }`}>
-      <Icon className="text-blue-400" />
+      <Icon className="text-blue-400" size={20} />
       <input
         {...field}
         {...props}
@@ -87,7 +87,7 @@ const CustomTextarea = ({ icon: Icon, field, form, ...props }) => {
         ? 'border-red-500/50' 
         : 'border-gray-700/50 focus-within:border-blue-500/50'
     }`}>
-      <Icon className="text-blue-400 mt-1" />
+      <Icon className="text-blue-400 mt-1" size={20} />
       <textarea
         {...field}
         {...props}
@@ -187,8 +187,8 @@ const Contact = () => {
       <section id="contact" className="relative py-24 bg-gradient-to-br from-gray-900 via-black to-gray-900 min-h-screen">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">
-            About <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Me</span>
+          <h2 className="text-4xl md:text-6xl font-bold mb-6 text-white">
+            Contact <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Me</span>
           </h2>
           <div className="flex items-center justify-center gap-4 mb-4">
             <div className="w-16 h-0.5 bg-gradient-to-r from-transparent to-blue-500"></div>
@@ -218,7 +218,7 @@ const Contact = () => {
                   <Field
                     name="name"
                     component={CustomField}
-                    icon={FaUser}
+                    icon={User}
                     placeholder="Your name"
                   />
                   <ErrorMessage name="name" component="p" className="text-red-400 text-sm ml-1 mt-1" />
@@ -230,7 +230,7 @@ const Contact = () => {
                     name="email"
                     type="email"
                     component={CustomField}
-                    icon={FaEnvelope}
+                    icon={Mail}
                     placeholder="Your email"
                   />
                   <ErrorMessage name="email" component="p" className="text-red-400 text-sm ml-1 mt-1" />
@@ -241,7 +241,7 @@ const Contact = () => {
                   <Field
                     name="message"
                     component={CustomTextarea}
-                    icon={FaCommentDots}
+                    icon={MessageSquare}
                     placeholder="Your message"
                   />
                   <ErrorMessage name="message" component="p" className="text-red-400 text-sm ml-1 mt-1" />
@@ -265,7 +265,7 @@ const Contact = () => {
                       </>
                     ) : (
                       <>
-                        Send Message <FaPaperPlane />
+                        Send Message <Send size={16} />
                       </>
                     )}
                   </button>
