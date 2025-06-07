@@ -147,10 +147,11 @@ const Hero = () => {
 
   return (
     <section 
-      ref={heroRef}
-      id="hero" 
-      className="relative min-h-screen flex items-center justify-center overflow-hidden py-8 sm:py-12 lg:py-0"
-    >
+  ref={heroRef}
+  id="hero" 
+  className="relative min-h-[90vh] flex items-center justify-center overflow-hidden py-6 sm:py-8 lg:py-0 mb-8"
+>
+
       {/* Animated background elements - responsive sizing */}
       <div ref={backgroundRef} className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-20 -right-20 sm:-top-40 sm:-right-40 w-40 h-40 sm:w-80 sm:h-80 bg-blue-500/10 rounded-full blur-2xl sm:blur-3xl animate-pulse"></div>
