@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import Me from "../assets/205A2683-removebg-preview.png";
+import Image from "../assets/kach/Image-Blue.jpg";
 
 const Hero = () => {
   const [displayText, setDisplayText] = useState('');
@@ -149,98 +149,104 @@ const Hero = () => {
     <section 
       ref={heroRef}
       id="hero" 
-      className="relative h-[92vh] flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden py-8 sm:py-12 lg:py-0"
     >
-      {/* Animated background elements */}
+      {/* Animated background elements - responsive sizing */}
       <div ref={backgroundRef} className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl animate-pulse delay-500"></div>
+        <div className="absolute -top-20 -right-20 sm:-top-40 sm:-right-40 w-40 h-40 sm:w-80 sm:h-80 bg-blue-500/10 rounded-full blur-2xl sm:blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-20 -left-20 sm:-bottom-40 sm:-left-40 w-40 h-40 sm:w-80 sm:h-80 bg-purple-500/10 rounded-full blur-2xl sm:blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 sm:w-96 sm:h-96 bg-cyan-500/5 rounded-full blur-2xl sm:blur-3xl animate-pulse delay-500"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 w-full relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full relative z-10">
+        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
           {/* Content Section */}
-          <div className="space-y-6 lg:space-y-8 order-2 lg:order-1">
-            {/* Name with enhanced styling */}
+          <div className="space-y-4 sm:space-y-6 lg:space-y-8 order-2 lg:order-1 text-center lg:text-left">
+            {/* Name with enhanced styling - responsive text sizes */}
             <div ref={nameRef} className="relative">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
+              <h1 className="text-3xl xs:text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
                 <span className="block bg-gradient-to-r from-white via-blue-400 to-purple-400 bg-clip-text text-transparent">
                   Hamza
                 </span>
-                <span className="block bg-gradient-to-r from-purple-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent mt-2">
+                <span className="block bg-gradient-to-r from-purple-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent mt-1 sm:mt-2">
                   Oukhatou
                 </span>
               </h1>
-              {/* Decorative element */}
-              <div className="absolute -left-4 top-1/2 transform -translate-y-1/2 w-1 h-16 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full opacity-50"></div>
+              {/* Decorative element - hidden on mobile, visible on larger screens */}
+              <div className="hidden lg:block absolute -left-4 top-1/2 transform -translate-y-1/2 w-1 h-16 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full opacity-50"></div>
             </div>
 
-            {/* Typing animation */}
-            <div ref={typingRef} className="h-16 flex items-center">
-              <span className="text-2xl sm:text-3xl lg:text-4xl font-medium text-gray-300 font-mono">
+            {/* Typing animation - responsive height and text size */}
+            <div ref={typingRef} className="h-12 sm:h-14 lg:h-16 flex items-center justify-center lg:justify-start">
+              <span className="text-lg xs:text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-medium text-gray-300 font-mono text-center lg:text-left">
                 {animationsCompleted && displayText}
                 <span className="animate-pulse text-cyan-400 ml-1">|</span>
               </span>
             </div>
 
-            {/* Description */}
-            <p ref={descriptionRef} className="text-lg sm:text-xl text-gray-400 leading-relaxed max-w-2xl">
+            {/* Description - responsive text size and spacing */}
+            <p ref={descriptionRef} className="text-base sm:text-lg lg:text-xl text-gray-400 leading-relaxed max-w-2xl mx-auto lg:mx-0">
               Passionate about crafting exceptional digital experiences through innovative 
               <span className="text-blue-400 font-medium"> design</span> and 
               <span className="text-purple-400 font-medium"> development</span>. 
               Let's transform ideas into reality.
             </p>
 
-            {/* Enhanced CTA buttons */}
-            <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4 pt-6">
-              <a href="#projects" className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 via-blue-700 to-purple-600 text-white font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/25">
+            {/* Enhanced CTA buttons - responsive sizing */}
+            <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 sm:pt-6 items-center lg:items-start">
+              <a href="#projects" className="group relative w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 via-blue-700 to-purple-600 text-white font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/25 text-center">
                 <span className="relative z-10">View My Work</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </a>
 
-              <a href="#contact" className="group px-8 py-4 border-2 border-blue-500/50 text-blue-400 font-semibold rounded-xl relative overflow-hidden transition-all duration-300 hover:border-blue-400 hover:text-white hover:scale-105">
+              <a href="#contact" className="group w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-2 border-blue-500/50 text-blue-400 font-semibold rounded-xl relative overflow-hidden transition-all duration-300 hover:border-blue-400 hover:text-white hover:scale-105 text-center">
                 <span className="relative z-10">Let's Connect</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </a>
             </div>
 
-            {/* Social proof or stats */}
-            <div ref={statsRef} className="flex gap-8 pt-6 text-sm text-gray-500">
+            {/* Social proof or stats - responsive layout */}
+            <div ref={statsRef} className="flex justify-center lg:justify-start gap-6 sm:gap-8 pt-4 sm:pt-6 text-sm">
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-400">20+</div>
-                <div>Projects</div>
+                <div className="text-xl sm:text-2xl font-bold text-blue-400">20+</div>
+                <div className="text-gray-500">Projects</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-400">2+</div>
-                <div>Years Exp</div>
+                <div className="text-xl sm:text-2xl font-bold text-purple-400">2+</div>
+                <div className="text-gray-500">Years Exp</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-cyan-400">100%</div>
-                <div>Satisfaction</div>
+                <div className="text-xl sm:text-2xl font-bold text-cyan-400">100%</div>
+                <div className="text-gray-500">Satisfaction</div>
               </div>
             </div>
           </div>
 
-          {/* Enhanced Image Section */}
-          <div className="relative order-1 lg:order-2">
-            <div ref={imageRef} className="relative group max-w-md mx-auto lg:max-w-full">
-              {/* Animated background rings */}
-              <div className="absolute inset-0 animate-spin-slow">
+          {/* Enhanced Image Section - Major mobile improvements */}
+          <div className="relative order-1 lg:order-2 flex justify-center">
+            <div ref={imageRef} className="relative group w-64 h-64 xs:w-72 xs:h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 lg:w-full lg:h-auto lg:max-w-md xl:max-w-lg">
+              {/* Animated background rings - responsive sizing */}
+              <div className="absolute inset-0 animate-spin-slow hidden sm:block">
                 <div className="absolute inset-4 border border-blue-500/20 rounded-full"></div>
                 <div className="absolute inset-8 border border-purple-500/20 rounded-full"></div>
                 <div className="absolute inset-12 border border-cyan-500/20 rounded-full"></div>
               </div>
               
-              {/* Main glow effect */}
-              <div className="absolute -inset-4 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-all duration-500"></div>
+              {/* Mobile version with simpler rings */}
+              <div className="absolute inset-0 animate-spin-slow sm:hidden">
+                <div className="absolute inset-2 border border-blue-500/20 rounded-full"></div>
+                <div className="absolute inset-4 border border-purple-500/20 rounded-full"></div>
+              </div>
               
-              {/* Image container */}
-              <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-2 rounded-2xl">
+              {/* Main glow effect - responsive blur */}
+              <div className="absolute -inset-2 sm:-inset-4 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded-xl sm:rounded-2xl blur-lg sm:blur-xl opacity-30 group-hover:opacity-50 transition-all duration-500"></div>
+              
+              {/* Image container - responsive padding and sizing */}
+              <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-1 sm:p-2 rounded-xl sm:rounded-2xl h-full">
                 <img 
-                  src={Me} 
+                  src={Image} 
                   alt="Hamza Oukhatou - Full Stack Developer" 
-                  className="relative rounded-xl w-full object-cover shadow-2xl transform transition-all duration-500 group-hover:scale-[1.02] filter brightness-110"
+                  className="relative rounded-lg sm:rounded-xl w-full h-full object-cover object-center shadow-2xl transform transition-all duration-500 group-hover:scale-[1.02] filter brightness-110"
                 />
               </div>
             </div>
@@ -248,8 +254,8 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div ref={scrollIndicatorRef} className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+      {/* Scroll indicator - hidden on small screens, visible on larger */}
+      <div ref={scrollIndicatorRef} className="hidden sm:block absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
         <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
           <div className="w-1 h-3 bg-gradient-to-b from-blue-400 to-purple-400 rounded-full mt-2 animate-pulse"></div>
         </div>

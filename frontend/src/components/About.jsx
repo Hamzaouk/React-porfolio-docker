@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import Veg from "../assets/Me-gray.png";
-import CV from "../assets/cv/OukhatouuHamza-cv.pdf";
+import Image from "../assets/kach/Image-About.jpg"
+
 
 const About = () => {
   const sectionRef = useRef();
@@ -83,7 +83,7 @@ const About = () => {
               {/* Image container with glass effect */}
               <div className="relative bg-gradient-to-br from-gray-900/80 via-gray-800/60 to-gray-900/80 backdrop-blur-sm p-3 rounded-2xl border border-gray-700/50">
                 <img 
-                  src={Veg} 
+                  src={Image} 
                   alt="Hamza Oukhatou - About" 
                   className="relative rounded-xl w-full object-cover shadow-2xl transform transition-all duration-700 group-hover:scale-[1.02] filter brightness-110"
                 />
@@ -128,7 +128,7 @@ const About = () => {
             {/* Enhanced CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <a
-                href={CV}
+                href={Image}
                 download="Hamza-Oukhatou-CV.pdf"
                 className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 via-blue-700 to-purple-600 text-white font-semibold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/25"
               >
