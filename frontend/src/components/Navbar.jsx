@@ -3,127 +3,96 @@ import { Menu, X, ChevronDown, Sun, Moon } from "lucide-react";
 import { FaLinkedin, FaGithub, FaEnvelope } from "react-icons/fa6";
 import Logo from "../assets/Logo.png";
 
-const Navbar = () => {
-
+const Navbar = ({ darkMode, toggleDarkMode }) => {
   const navItems = [
-  { label: 'Home', section: 'hero' },
-  { label: 'About', section: 'about' },
-  { label: 'Skills', section: 'skills' },
-  { label: 'Projects', section: 'projects' },
-  { label: 'Contact', section: 'contact' },
-];
+    { label: 'Home', section: 'hero' },
+    { label: 'About', section: 'about' },
+    { label: 'Skills', section: 'skills' },
+    { label: 'Projects', section: 'projects' },
+    { label: 'Contact', section: 'contact' },
+  ];
 
-const socialLinks = [
-  { 
-    icon: FaLinkedin, 
-    href: 'https://www.linkedin.com/in/hamza-oukhatou-55035622b/', 
-    color: 'hover:text-blue-400' 
-  },
-  { 
-    icon: FaGithub, 
-    href: 'https://github.com/Hamzaouk', 
-    color: 'hover:text-purple-400' 
-  },
-  { 
-    icon: FaEnvelope, 
-    href: 'mailto:oukhatouhamza@gmail.com', 
-    color: 'hover:text-cyan-400' 
-  }
-];
+  const socialLinks = [
+    { 
+      icon: FaLinkedin, 
+      href: 'https://www.linkedin.com/in/hamza-oukhatou-55035622b/', 
+      color: 'hover:text-blue-400' 
+    },
+    { 
+      icon: FaGithub, 
+      href: 'https://github.com/Hamzaouk', 
+      color: 'hover:text-purple-400' 
+    },
+    { 
+      icon: FaEnvelope, 
+      href: 'mailto:oukhatouhamza@gmail.com', 
+      color: 'hover:text-cyan-400' 
+    }
+  ];
 
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   const [isScrolled, setIsScrolled] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [darkMode, setDarkMode] = useState(() => {
-    // Check localStorage first, then fallback to system preference
-    if (typeof window !== 'undefined') {
-      const savedMode = localStorage.getItem('darkMode');
-      if (savedMode !== null) return JSON.parse(savedMode);
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-    return true;
-  });
 
-  // Apply theme and save preference
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    localStorage.setItem('darkMode', JSON.stringify(darkMode));
-  }, [darkMode]);
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
-
-  // Rest of your existing useEffect hooks remain the same...
-useEffect(() => {
-  const handleScroll = () => {
-    setIsScrolled(window.scrollY > 20);
-    
-    const sections = ['hero', 'about', 'skills', 'projects', 'contact'];
-    const scrollPosition = window.scrollY + window.innerHeight / 3; // More precise detection
-    
-    let currentSection = activeSection; // Default to current active section
-    
-    for (const sectionId of sections) {
-      const element = document.getElementById(sectionId);
-      if (element) {
-        const offsetTop = element.offsetTop;
-        const offsetBottom = offsetTop + element.offsetHeight;
-        
-        if (scrollPosition >= offsetTop && scrollPosition < offsetBottom) {
-          currentSection = sectionId;
-          break; // Exit loop once we find the active section
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+      
+      const sections = ['hero', 'about', 'skills', 'projects', 'contact'];
+      const scrollPosition = window.scrollY + window.innerHeight / 3;
+      
+      let currentSection = activeSection;
+      
+      for (const sectionId of sections) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          const offsetTop = element.offsetTop;
+          const offsetBottom = offsetTop + element.offsetHeight;
+          
+          if (scrollPosition >= offsetTop && scrollPosition < offsetBottom) {
+            currentSection = sectionId;
+            break;
+          }
         }
       }
-    }
+      
+      if (currentSection !== activeSection) {
+        setActiveSection(currentSection);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [activeSection]);
+
+  const scrollToSection = (sectionId) => {
+    if (sectionId === activeSection) return;
     
-    // Only update if changed to prevent unnecessary re-renders
-    if (currentSection !== activeSection) {
-      setActiveSection(currentSection);
+    const element = document.getElementById(sectionId);
+    if (element) {
+      setIsOpen(false);
+      const scrollListener = () => {};
+      window.addEventListener('scroll', scrollListener, { once: true });
+      
+      const offset = 100;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+      
+      setTimeout(() => {
+        setActiveSection(sectionId);
+        window.removeEventListener('scroll', scrollListener);
+      }, 300);
     }
   };
-
-  window.addEventListener('scroll', handleScroll);
-  return () => window.removeEventListener('scroll', handleScroll);
-}, [activeSection]); // Add activeSection as dependency
-
-const scrollToSection = (sectionId) => {
-  // Don't scroll if already on this section
-  if (sectionId === activeSection) return;
-  
-  const element = document.getElementById(sectionId);
-  if (element) {
-    setIsOpen(false); // Close mobile menu
-    
-    // Temporarily disable scroll listener to prevent conflict
-    const scrollListener = () => {};
-    window.addEventListener('scroll', scrollListener, { once: true });
-    
-    const offset = 100;
-    const elementPosition = element.getBoundingClientRect().top;
-    const offsetPosition = elementPosition + window.pageYOffset - offset;
-    
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: 'smooth'
-    });
-    
-    // Update active section after a small delay
-    setTimeout(() => {
-      setActiveSection(sectionId);
-      window.removeEventListener('scroll', scrollListener);
-    }, 300);
-  }
-};
 
   return (
     <>
-      {/* Animated background blur - now adapts to theme */}
       <div
         className="fixed inset-0 pointer-events-none z-40"
         style={{
@@ -142,9 +111,8 @@ const scrollToSection = (sectionId) => {
             ? 'bg-gradient-to-r from-transparent via-black/20 to-transparent backdrop-blur-sm'
             : 'bg-gradient-to-r from-transparent via-gray-100/50 to-transparent backdrop-blur-sm'
       }`}>
-        <div className={`h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent transition-opacity duration-500 ${
-          isScrolled ? 'opacity-100' : 'opacity-0'
-        }`} />
+        
+      
 
         <div className="max-w-7xl mx-auto px-6 relative">
           <div className="flex items-center justify-between h-20">
@@ -322,11 +290,9 @@ const scrollToSection = (sectionId) => {
             </div>
           </div>
         </div>
-      </nav>
+     </nav>
 
       <div className="h-20"></div>
-
-      {/* Rest of your styles... */}
     </>
   );
 };

@@ -74,7 +74,7 @@ const Skills = () => {
     <section 
       ref={containerRef} 
       id="skills" 
-      className="relative py-12 sm:py-16 md:py-20 lg:py-24 bg-gradient-to-br from-gray-900 via-black to-gray-900 px-4 sm:px-6"
+      className="relative py-12 sm:py-16 md:py-20 lg:py-24  from-gray-900 via-black to-gray-900 px-4 sm:px-6"
     >
       {/* Mouse follow effect - only on desktop */}
       {!isMobile && (

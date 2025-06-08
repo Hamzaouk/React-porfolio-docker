@@ -17,7 +17,7 @@ const validationSchema = Yup.object({
 });
 
 // Toast Component
-const Toast = ({ message, type, isVisible, onClose }) => {
+const Toast = ({ message, type, isVisible, onClose, darkMode }) => {
   useEffect(() => {
     if (isVisible) {
       const timer = setTimeout(() => {
@@ -35,20 +35,24 @@ const Toast = ({ message, type, isVisible, onClose }) => {
     }`}>
       <div className={`flex items-center gap-3 px-6 py-4 rounded-lg shadow-2xl backdrop-blur-sm border ${
         type === 'success' 
-          ? 'bg-green-900/90 border-green-500/50 text-green-100' 
-          : 'bg-red-900/90 border-red-500/50 text-red-100'
+          ? darkMode
+            ? 'bg-green-900/90 border-green-500/50 text-green-100' 
+            : 'bg-green-100/90 border-green-500/50 text-green-900'
+          : darkMode
+            ? 'bg-red-900/90 border-red-500/50 text-red-100'
+            : 'bg-red-100/90 border-red-500/50 text-red-900'
       }`}>
         <div className="flex items-center gap-2">
           {type === 'success' ? (
-            <CheckCircle className="text-green-400\" size={18} />
+            <CheckCircle className={darkMode ? "text-green-400" : "text-green-600"} size={18} />
           ) : (
-            <X className="text-red-400" size={18} />
+            <X className={darkMode ? "text-red-400" : "text-red-600"} size={18} />
           )}
           <span className="font-medium">{message}</span>
         </div>
         <button
           onClick={onClose}
-          className="ml-2 text-gray-300 hover:text-white transition-colors"
+          className={`ml-2 transition-colors ${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-black'}`}
         >
           <X size={14} />
         </button>
@@ -58,47 +62,63 @@ const Toast = ({ message, type, isVisible, onClose }) => {
 };
 
 // Custom Field Component
-const CustomField = ({ icon: Icon, field, form, ...props }) => {
+const CustomField = ({ icon: Icon, field, form, darkMode, ...props }) => {
   const hasError = form.errors[field.name] && form.touched[field.name];
   
   return (
-    <div className={`flex items-center gap-3 bg-gray-800/60 rounded-md px-4 py-3 border transition-colors ${
+    <div className={`flex items-center gap-3 rounded-md px-4 py-3 border transition-colors ${
+      darkMode 
+        ? 'bg-gray-800/60 border-gray-700/50 focus-within:border-blue-500/50' 
+        : 'bg-gray-100/60 border-gray-300/50 focus-within:border-blue-400/50'
+    } ${
       hasError 
-        ? 'border-red-500/50' 
-        : 'border-gray-700/50 focus-within:border-blue-500/50'
+        ? darkMode 
+          ? 'border-red-500/50' 
+          : 'border-red-400/50'
+        : ''
     }`}>
-      <Icon className="text-blue-400" size={20} />
+      <Icon className={darkMode ? "text-blue-400" : "text-blue-500"} size={20} />
       <input
         {...field}
         {...props}
-        className="bg-transparent outline-none w-full text-white placeholder-gray-400"
+        className={`bg-transparent outline-none w-full ${
+          darkMode ? 'text-white placeholder-gray-400' : 'text-gray-800 placeholder-gray-500'
+        }`}
       />
     </div>
   );
 };
 
 // Custom Textarea Component
-const CustomTextarea = ({ icon: Icon, field, form, ...props }) => {
+const CustomTextarea = ({ icon: Icon, field, form, darkMode, ...props }) => {
   const hasError = form.errors[field.name] && form.touched[field.name];
   
   return (
-    <div className={`flex items-start gap-3 bg-gray-800/60 rounded-md px-4 py-3 border transition-colors ${
+    <div className={`flex items-start gap-3 rounded-md px-4 py-3 border transition-colors ${
+      darkMode 
+        ? 'bg-gray-800/60 border-gray-700/50 focus-within:border-blue-500/50' 
+        : 'bg-gray-100/60 border-gray-300/50 focus-within:border-blue-400/50'
+    } ${
       hasError 
-        ? 'border-red-500/50' 
-        : 'border-gray-700/50 focus-within:border-blue-500/50'
+        ? darkMode 
+          ? 'border-red-500/50' 
+          : 'border-red-400/50'
+        : ''
     }`}>
-      <Icon className="text-blue-400 mt-1" size={20} />
+      <Icon className={`${darkMode ? "text-blue-400" : "text-blue-500"} mt-1`} size={20} />
       <textarea
         {...field}
         {...props}
-        className="bg-transparent outline-none w-full text-white placeholder-gray-400 resize-none"
+        className={`bg-transparent outline-none w-full resize-none ${
+          darkMode ? 'text-white placeholder-gray-400' : 'text-gray-800 placeholder-gray-500'
+        }`}
         rows={4}
       />
     </div>
   );
 };
 
-const Contact = () => {
+const Contact = ({ darkMode }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState({ isVisible: false, message: '', type: '' });
   const formRef = useRef(null);
@@ -182,20 +202,39 @@ const Contact = () => {
         type={toast.type}
         isVisible={toast.isVisible}
         onClose={hideToast}
+        darkMode={darkMode}
       />
       
-      <section id="contact" className="relative py-24 bg-gradient-to-br from-gray-900 via-black to-gray-900 min-h-screen">
+      <section id="contact" className={`relative py-24 min-h-screen ${
+        darkMode 
+          ? 'bg-gradient-to-br from-gray-900 via-black to-gray-900' 
+          : 'bg-gradient-to-br from-gray-50 via-white to-gray-50'
+      }`}>
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-            Contact <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Me</span>
+          <h2 className={`text-4xl md:text-6xl font-bold mb-6 ${
+            darkMode ? 'text-white' : 'text-gray-800'
+          }`}>
+            Contact <span className={`bg-clip-text text-transparent ${
+              darkMode 
+                ? 'bg-gradient-to-r from-blue-400 to-purple-400' 
+                : 'bg-gradient-to-r from-blue-500 to-purple-600'
+            }`}>Me</span>
           </h2>
           <div className="flex items-center justify-center gap-4 mb-4">
-            <div className="w-16 h-0.5 bg-gradient-to-r from-transparent to-blue-500"></div>
-            <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
-            <div className="w-16 h-0.5 bg-gradient-to-l from-transparent to-purple-500"></div>
+            <div className={`w-16 h-0.5 bg-gradient-to-r from-transparent ${
+              darkMode ? 'to-blue-500' : 'to-blue-400'
+            }`}></div>
+            <div className={`w-3 h-3 rounded-full animate-pulse ${
+              darkMode ? 'bg-blue-500' : 'bg-blue-400'
+            }`}></div>
+            <div className={`w-16 h-0.5 bg-gradient-to-l from-transparent ${
+              darkMode ? 'to-purple-500' : 'to-purple-400'
+            }`}></div>
           </div>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+          <p className={`text-lg max-w-2xl mx-auto ${
+            darkMode ? 'text-gray-400' : 'text-gray-600'
+          }`}>
             Let's work together to bring your ideas to life
           </p>
         </div>
@@ -220,8 +259,11 @@ const Contact = () => {
                     component={CustomField}
                     icon={User}
                     placeholder="Your name"
+                    darkMode={darkMode}
                   />
-                  <ErrorMessage name="name" component="p" className="text-red-400 text-sm ml-1 mt-1" />
+                  <ErrorMessage name="name" component="p" className={`text-sm ml-1 mt-1 ${
+                    darkMode ? 'text-red-400' : 'text-red-500'
+                  }`} />
                 </div>
 
                 {/* Email Field */}
@@ -232,8 +274,11 @@ const Contact = () => {
                     component={CustomField}
                     icon={Mail}
                     placeholder="Your email"
+                    darkMode={darkMode}
                   />
-                  <ErrorMessage name="email" component="p" className="text-red-400 text-sm ml-1 mt-1" />
+                  <ErrorMessage name="email" component="p" className={`text-sm ml-1 mt-1 ${
+                    darkMode ? 'text-red-400' : 'text-red-500'
+                  }`} />
                 </div>
 
                 {/* Message Field */}
@@ -243,24 +288,35 @@ const Contact = () => {
                     component={CustomTextarea}
                     icon={MessageSquare}
                     placeholder="Your message"
+                    darkMode={darkMode}
                   />
-                  <ErrorMessage name="message" component="p" className="text-red-400 text-sm ml-1 mt-1" />
+                  <ErrorMessage name="message" component="p" className={`text-sm ml-1 mt-1 ${
+                    darkMode ? 'text-red-400' : 'text-red-500'
+                  }`} />
                 </div>
 
                 {/* Submit Button */}
                 <div className="flex justify-center pt-4">
                   <button
                     type="submit"
-                    className={`flex items-center gap-2 px-8 py-3 rounded-lg text-white font-semibold transition-all duration-300 ${
+                    className={`flex items-center gap-2 px-8 py-3 rounded-lg font-semibold transition-all duration-300 ${
                       isSubmitting 
-                        ? 'bg-gray-600 cursor-not-allowed' 
-                        : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/25'
+                        ? darkMode
+                          ? 'bg-gray-600 text-gray-300 cursor-not-allowed'
+                          : 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                        : `text-white hover:scale-105 hover:shadow-xl ${
+                            darkMode
+                              ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:shadow-blue-500/25'
+                              : 'bg-gradient-to-r from-blue-400 to-purple-500 hover:shadow-blue-400/25'
+                          }`
                     }`}
                     disabled={isSubmitting || !formik.isValid}
                   >
                     {isSubmitting ? (
                       <>
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        <div className={`w-4 h-4 border-2 rounded-full animate-spin ${
+                          darkMode ? 'border-white/30 border-t-white' : 'border-gray-600/30 border-t-gray-600'
+                        }`}></div>
                         Sending...
                       </>
                     ) : (

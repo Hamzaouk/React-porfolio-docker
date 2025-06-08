@@ -233,7 +233,7 @@ const Projects = () => {
   ];
 
   return (
-    <div id="projects" className="relative min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 py-20 overflow-hidden">
+    <div id="projects" className="relative min-h-screen  from-gray-900 via-black to-gray-900 py-20 overflow-hidden">
       <div 
         className="absolute inset-0 opacity-30"
         style={{
