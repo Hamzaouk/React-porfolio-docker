@@ -1,13 +1,7 @@
-// components/Skills.jsx
 import React, { useState, useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { RiReactjsLine } from "react-icons/ri";
 import { FaHtml5, FaCss3Alt, FaNodeJs, FaJs, FaBootstrap } from "react-icons/fa";
 import { SiTailwindcss, SiSass } from "react-icons/si";
-
-// Register ScrollTrigger plugin
-gsap.registerPlugin(ScrollTrigger);
 
 const skills = [
   { icon: RiReactjsLine, name: "React", color: "text-cyan-400", bgColor: "from-cyan-500/20 to-blue-500/20", level: 90, description: "Modern UI library" },
@@ -25,119 +19,6 @@ const Skills = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef(null);
-  const sectionRef = useRef(null);
-  const headerRef = useRef(null);
-  const skillsGridRef = useRef(null);
-  const decorativeElementsRef = useRef(null);
-  const hasAnimated = useRef(false);
-
-  useEffect(() => {
-    // Only animate if it hasn't been animated before
-    if (hasAnimated.current) return;
-
-    const ctx = gsap.context(() => {
-      // Set initial states
-      gsap.set([headerRef.current, skillsGridRef.current], {
-        opacity: 0,
-        y: 50
-      });
-
-      gsap.set(decorativeElementsRef.current?.children || [], {
-        opacity: 0,
-        scale: 0,
-        rotation: 180
-      });
-
-      gsap.set(skillsGridRef.current?.children || [], {
-        opacity: 0,
-        y: 30,
-        scale: 0.8
-      });
-
-      // Create main timeline
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-          toggleActions: "play none none none",
-          once: true // This ensures it only plays once
-        },
-        onComplete: () => {
-          hasAnimated.current = true; // Mark as animated
-        }
-      });
-
-      // Animate section background
-      tl.fromTo(sectionRef.current, 
-        { opacity: 0 },
-        { 
-          opacity: 1, 
-          duration: 0.8,
-          ease: "power2.out"
-        }
-      );
-
-      // Animate header elements
-      tl.to(headerRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        ease: "power3.out"
-      }, "-=0.4");
-
-      // Animate decorative elements with stagger
-      tl.to(decorativeElementsRef.current?.children || [], {
-        opacity: 1,
-        scale: 1,
-        rotation: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "back.out(1.2)"
-      }, "-=0.6");
-
-      // Animate skills grid container
-      tl.to(skillsGridRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: "power3.out"
-      }, "-=0.4");
-
-      // Animate individual skill cards with stagger
-      tl.to(skillsGridRef.current?.children || [], {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.6,
-        stagger: {
-          amount: 1.2,
-          from: "start",
-          ease: "power2.out"
-        },
-        ease: "back.out(1.1)"
-      }, "-=0.2");
-
-      // Add continuous floating animation for skill cards
-      gsap.to(".skill-card-float", {
-        y: -5,
-        duration: 2.5,
-        repeat: -1,
-        yoyo: true,
-        ease: "power2.inOut",
-        stagger: {
-          amount: 1,
-          from: "random"
-        },
-        delay: 2 // Start after main animation
-      });
-
-    }, sectionRef);
-
-    return () => {
-      ctx.revert();
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-    };
-  }, []);
 
   useEffect(() => {
     // Check if device is mobile
@@ -191,88 +72,86 @@ const Skills = () => {
 
   return (
     <section 
-      ref={sectionRef}
+      ref={containerRef} 
       id="skills" 
       className="relative py-12 sm:py-16 md:py-20 lg:py-24 bg-gradient-to-br from-gray-900 via-black to-gray-900 px-4 sm:px-6"
     >
-      <div ref={containerRef}>
-        {/* Mouse follow effect - only on desktop */}
-        {!isMobile && (
-          <div 
-            className="absolute inset-0 opacity-30 transition-opacity duration-300"
-            style={{ 
-              background: `radial-gradient(1000px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(59, 130, 246, 0.1), transparent 50%)` 
-            }} 
-          />
-        )}
+      {/* Mouse follow effect - only on desktop */}
+      {!isMobile && (
+        <div 
+          className="absolute inset-0 opacity-30 transition-opacity duration-300"
+          style={{ 
+            background: `radial-gradient(1000px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(59, 130, 246, 0.1), transparent 50%)` 
+          }} 
+        />
+      )}
 
-        <div className="max-w-7xl mx-auto">
-          {/* Section Header - Responsive */}
-          <div ref={headerRef} className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6">
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">My</span> Skills
-            </h2>
-            <div ref={decorativeElementsRef} className="flex items-center justify-center gap-2 sm:gap-4 mb-3 sm:mb-4">
-              <div className="w-8 sm:w-16 h-0.5 bg-gradient-to-r from-transparent to-blue-500"></div>
-              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-blue-500 rounded-full animate-pulse"></div>
-              <div className="w-8 sm:w-16 h-0.5 bg-gradient-to-l from-transparent to-purple-500"></div>
-            </div>
-            <p className="text-gray-400 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto px-4">
-              Technologies and tools I use to bring ideas to life
-            </p>
+      <div className="max-w-7xl mx-auto">
+        {/* Section Header - Responsive */}
+        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+          <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6">
+            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">My</span> Skills
+          </h2>
+          <div className="flex items-center justify-center gap-2 sm:gap-4 mb-3 sm:mb-4">
+            <div className="w-8 sm:w-16 h-0.5 bg-gradient-to-r from-transparent to-blue-500"></div>
+            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-blue-500 rounded-full animate-pulse"></div>
+            <div className="w-8 sm:w-16 h-0.5 bg-gradient-to-l from-transparent to-purple-500"></div>
           </div>
+          <p className="text-gray-400 text-sm sm:text-base lg:text-lg max-w-2xl mx-auto px-4">
+            Technologies and tools I use to bring ideas to life
+          </p>
+        </div>
 
-          {/* Skills Grid - Responsive layout */}
-          <div ref={skillsGridRef} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-            {skills.map((skill, index) => (
-              <div 
-                key={index} 
-                className="group relative cursor-pointer skill-card-float" 
-                onMouseEnter={() => handleSkillHover(index)} 
-                onMouseLeave={handleSkillLeave}
-                onClick={() => handleSkillClick(index)}
-              >
-                {/* Glow effect - less prominent on mobile */}
-                <div className={`absolute inset-0 bg-gradient-to-r ${skill.bgColor} rounded-xl sm:rounded-2xl blur-lg sm:blur-xl opacity-0 group-hover:opacity-40 sm:group-hover:opacity-60 transition-opacity duration-500 ${isMobile && activeSkill === index ? 'opacity-40' : ''}`} />
-                
-                {/* Main card */}
-                <div className={`relative bg-gradient-to-br from-gray-800/40 to-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 transition-all duration-500 hover:border-gray-600/50 hover:transform hover:scale-[1.02] sm:hover:scale-105 hover:-translate-y-1 sm:hover:-translate-y-2 ${isMobile && activeSkill === index ? 'border-gray-600/50 scale-[1.02] -translate-y-1 ' + skill.bgColor.replace('/20', '/10') : ''}`}>
-                  <div className="flex flex-col items-center space-y-2 sm:space-y-3 md:space-y-4">
-                    {/* Icon with level badge */}
-                    <div className="relative">
-                      <skill.icon className={`text-3xl xs:text-4xl sm:text-5xl md:text-6xl ${skill.color} transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-lg ${isMobile && activeSkill === index ? 'scale-110 drop-shadow-lg' : ''}`} />
-                      {/* Level badge - shown on hover/active */}
-                      <div className={`absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-r ${skill.bgColor.replace('/20', '/80')} rounded-full flex items-center justify-center text-xs font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${isMobile && activeSkill === index ? 'opacity-100' : ''}`}>
-                        <span className="text-xs sm:text-xs">{skill.level}</span>
-                      </div>
+        {/* Skills Grid - Responsive layout */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+          {skills.map((skill, index) => (
+            <div 
+              key={index} 
+              className="group relative cursor-pointer" 
+              onMouseEnter={() => handleSkillHover(index)} 
+              onMouseLeave={handleSkillLeave}
+              onClick={() => handleSkillClick(index)}
+            >
+              {/* Glow effect - less prominent on mobile */}
+              <div className={`absolute inset-0 bg-gradient-to-r ${skill.bgColor} rounded-xl sm:rounded-2xl blur-lg sm:blur-xl opacity-0 group-hover:opacity-40 sm:group-hover:opacity-60 transition-opacity duration-500 ${isMobile && activeSkill === index ? 'opacity-40' : ''}`} />
+              
+              {/* Main card */}
+              <div className={`relative bg-gradient-to-br from-gray-800/40 to-gray-900/40 backdrop-blur-xl border border-gray-700/50 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 transition-all duration-500 hover:border-gray-600/50 hover:transform hover:scale-[1.02] sm:hover:scale-105 hover:-translate-y-1 sm:hover:-translate-y-2 ${isMobile && activeSkill === index ? 'border-gray-600/50 scale-[1.02] -translate-y-1 ' + skill.bgColor.replace('/20', '/10') : ''}`}>
+                <div className="flex flex-col items-center space-y-2 sm:space-y-3 md:space-y-4">
+                  {/* Icon with level badge */}
+                  <div className="relative">
+                    <skill.icon className={`text-3xl xs:text-4xl sm:text-5xl md:text-6xl ${skill.color} transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-lg ${isMobile && activeSkill === index ? 'scale-110 drop-shadow-lg' : ''}`} />
+                    {/* Level badge - shown on hover/active */}
+                    <div className={`absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-r ${skill.bgColor.replace('/20', '/80')} rounded-full flex items-center justify-center text-xs font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${isMobile && activeSkill === index ? 'opacity-100' : ''}`}>
+                      <span className="text-xs sm:text-xs">{skill.level}</span>
                     </div>
-                    
-                    {/* Skill name and description */}
-                    <div className="text-center">
-                      <h3 className={`text-white font-semibold text-sm sm:text-base lg:text-lg mb-1 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-purple-600 transition-all duration-300 ${isMobile && activeSkill === index ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600' : ''}`}>
-                        {skill.name}
-                      </h3>
-                      <p className={`text-gray-500 text-xs sm:text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${isMobile && activeSkill === index ? 'opacity-100' : ''}`}>
-                        {skill.description}
-                      </p>
-                    </div>
-                    
-                    {/* Progress bar - shown on hover/active */}
-                    <div className={`w-full bg-gray-700/50 rounded-full h-1.5 sm:h-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${isMobile && activeSkill === index ? 'opacity-100' : ''}`}>
-                      <div 
-                        className={`h-full bg-gradient-to-r ${skill.bgColor.replace('/20', '')} rounded-full transition-all duration-1000 ease-out`} 
-                        style={{ 
-                          width: (activeSkill === index || (!isMobile && activeSkill === index)) ? `${skill.level}%` : '0%' 
-                        }} 
-                      />
-                    </div>
+                  </div>
+                  
+                  {/* Skill name and description */}
+                  <div className="text-center">
+                    <h3 className={`text-white font-semibold text-sm sm:text-base lg:text-lg mb-1 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-400 group-hover:to-purple-600 transition-all duration-300 ${isMobile && activeSkill === index ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600' : ''}`}>
+                      {skill.name}
+                    </h3>
+                    <p className={`text-gray-500 text-xs sm:text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${isMobile && activeSkill === index ? 'opacity-100' : ''}`}>
+                      {skill.description}
+                    </p>
+                  </div>
+                  
+                  {/* Progress bar - shown on hover/active */}
+                  <div className={`w-full bg-gray-700/50 rounded-full h-1.5 sm:h-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${isMobile && activeSkill === index ? 'opacity-100' : ''}`}>
+                    <div 
+                      className={`h-full bg-gradient-to-r ${skill.bgColor.replace('/20', '')} rounded-full transition-all duration-1000 ease-out`} 
+                      style={{ 
+                        width: (activeSkill === index || (!isMobile && activeSkill === index)) ? `${skill.level}%` : '0%' 
+                      }} 
+                    />
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-
+            </div>
+          ))}
         </div>
+
       </div>
     </section>
   );
